@@ -8,6 +8,11 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\EntryForm;
+use app\models\Students;
+use app\models\Results;
+use app\models\SoapClientCurl;
+use yii\widgets\ActiveForm;
 
 class SiteController extends Controller
 {
@@ -62,7 +67,89 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+    public function actionRegistration()
+    {
+    	$model = new Students();
+    
+    	if ($model->load(Yii::$app->request->post())) {
+    		if ($model->validate()) {
+    			// form inputs are valid, do something here
+    			return;
+    		}
+    	}
+    
+    	return $this->render('Registration', [
+    			'model' => $model,
+    	]);
+    }
+    public function actionEntry()
+    {
+    	$model = new EntryForm();
+    
+    	if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+    		// valid data received in $model
+    
+    		// do something meaningful here about $model ...
+    
+    		return $this->render('entry-confirm', ['model' => $model]);
+    	} else {
+    		// either the page is initially displayed or there is some validation error
+    		return $this->render('entry', ['model' => $model]);
+    	}
+    }
+    public function actionDashboard()
+    {   
+    	$model = new EntryForm();
+    	return $this->render('dashboard',['model' => $model]);
+    }
+    
+    public function actionD3sample() {
+    	return $this->render('d3Sample');
+    }
+    
+    public function actionD3() {
+    	echo "<br/><br/><br/><br/><pre>";
+    	$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, "http://www.w3schools.com/xml/note.xml");
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
+		
+		$result = curl_exec($curl);
+		curl_close($curl);
+		print_r(json_decode($result));//return amazone autocomplete suggestion
+		
+		print_r(($result));
+		$array = json_decode ($result, true);
+		echo "</pre>";
+		$result =  new Results();
+		print_r($result->toArray($result));
 
+    	return $this->render('d3');
+    }
+    
+    public function actionCharts() {
+    	
+    	
+    	return $this->render('charts');
+    	
+    }
+    public function action_uploadStatus() {
+    	 
+    	 
+    	return $this->render('_uploadStatus');
+    	 
+    }
+    
+      // femy added
+    public function actionSay($message = 'Hello')
+    {
+    	return $this->render('say', ['message' => $message]);
+    }
+
+    public function actionChumma($firstpara = 'njan', $secondpara = 'epool' , $thirdpara = 'evide')
+    {
+    	return $this->render('varuthe', ['firstpara' => $firstpara, 'secondpara' => $secondpara, 'thirdpara' => $thirdpara]);
+    }
     /**
      * Login action.
      *
